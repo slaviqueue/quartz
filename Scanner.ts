@@ -18,7 +18,7 @@ type Token = {
 
 type KeywordsMapping = Record<string, TokenType>;
 
-class Tokenizer {
+class Scanner {
   private code: string;
   private currentPos: number;
   private tokens: Array<Token>;
@@ -37,7 +37,7 @@ class Tokenizer {
     };
   }
 
-  tokenize() {
+  scan() {
     while (this.currentPos < this.code.length) {
       if (this.isNumber(this.current())) {
         this.eatMany("NUMBER", this.isNumber);
@@ -140,6 +140,6 @@ const code = `
   if a then 3 else 5
 `;
 
-const result = new Tokenizer(code).tokenize();
+const result = new Scanner(code).scan();
 
 console.log(result);
