@@ -7,6 +7,7 @@ function parse (code: string) {
 
 const code = `
   val a = sum(1, 2)
+  if 1 then yes() else no()
 `
 
 console.log(JSON.stringify(parse(code), null, '  '))

@@ -4,6 +4,7 @@
   "description": "simple language which compiles to js",
   "main": "index.js",
   "scripts": {
+    "start": "./node_modules/.bin/ts-node .",
     "lint": "./node_modules/.bin/eslint ./*.ts --fix",
     "test": "mocha -r ts-node/register test/**"
   },

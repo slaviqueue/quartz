@@ -49,15 +49,19 @@ class Parser extends BaseParser {
         return this.prev()
       }
     } else if (this.match('L_PAREN')) {
-      const group = { type: 'GROUP', body: this.expr() }
-
-      this.match('R_PAREN')
-      return group
+      return this.finishGroup()
     } else if (this.match('NUMBER')) {
       return this.prev()
     }
 
     return this.complain()
+  }
+
+  finishGroup () {
+    const group = { type: 'GROUP', body: this.expr() }
+
+    this.match('R_PAREN')
+    return group
   }
 
   finishFunction () {
