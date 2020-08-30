@@ -20,6 +20,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': [
       'error'
     ],
-    semi: 'error'
+    semi: 'error',
+    'brace-style': 'off'
   }
 }

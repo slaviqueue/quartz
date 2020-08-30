@@ -28,25 +28,43 @@ class Scanner {
     while (this.currentPos < this.code.length) {
       if (this.isNumber(this.current())) {
         this.eatMany('NUMBER', this.isNumber, Number)
-      } else if (this.isWhiteSpace(this.current())) {
+      }
+
+      else if (this.isWhiteSpace(this.current())) {
         this.skipMany(this.isWhiteSpace)
-      } else if (this.isText(this.current())) {
+      }
+
+      else if (this.isText(this.current())) {
         this.eatIdentifier()
-      } else if (this.matchMany('===')) {
+      }
+
+      else if (this.matchMany('===')) {
         this.pushToken('STRICT_EQ')
         this.skipN(3)
-      } else if (this.match('=')) {
+      }
+
+      else if (this.match('=')) {
         this.eatOne('ASSIGNMENT')
-      } else if (this.match('(')) {
+      }
+
+      else if (this.match('(')) {
         this.eatOne('L_PAREN')
-      } else if (this.match(')')) {
+      }
+
+      else if (this.match(')')) {
         this.eatOne('R_PAREN')
-      } else if (this.matchMany('|>')) {
+      }
+
+      else if (this.matchMany('|>')) {
         this.pushToken('PIPE')
         this.skipN(2)
-      } else if (this.match(',')) {
+      }
+
+      else if (this.match(',')) {
         this.eatOne('COMA')
-      } else {
+      }
+
+      else {
         throw new Error(
           `unexpected character at ${this.currentPos}: ${this.current()}`
         )

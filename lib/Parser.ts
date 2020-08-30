@@ -29,7 +29,9 @@ class Parser extends BaseParser {
       const elseBranch = this.expr()
 
       return { type: 'CONDITION', condition, ifBranch, elseBranch }
-    } else if (this.match('VAL')) {
+    }
+
+    else if (this.match('VAL')) {
       this.matchStrict('IDENTIFIER')
       const id = this.prev()
       this.matchStrict('ASSIGNMENT')
@@ -45,12 +47,18 @@ class Parser extends BaseParser {
     if (this.match('IDENTIFIER')) {
       if (this.check('L_PAREN')) {
         return this.finishFunction()
-      } else {
+      }
+
+      else {
         return this.prev()
       }
-    } else if (this.match('L_PAREN')) {
+    }
+
+    else if (this.match('L_PAREN')) {
       return this.finishGroup()
-    } else if (this.match('NUMBER')) {
+    }
+
+    else if (this.match('NUMBER')) {
       return this.prev()
     }
 
