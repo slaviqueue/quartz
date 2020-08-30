@@ -44,7 +44,7 @@ class CodeGenerator {
       }
 
       default: {
-        throw new Error(`Unspecified generation branch for node ${node.type}`)
+        throw new Error(`Unspecified generation branch for node ${(node as Expression).type}`)
       }
     }
   }
