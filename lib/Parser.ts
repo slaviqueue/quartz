@@ -1,4 +1,5 @@
 import BaseParser from './BaseParser'
+import { Module, Expression, Primary, Group, FunctionCall } from './SyntaxNodes'
 
 class Parser extends BaseParser {
   parse () {
@@ -6,7 +7,7 @@ class Parser extends BaseParser {
   }
 
   module () {
-    const module: { type: string, body: Array<object | null> } = {
+    const module: Module = {
       type: 'MODULE',
       body: []
     }
@@ -18,7 +19,7 @@ class Parser extends BaseParser {
     return module
   }
 
-  pipe (): object {
+  pipe (): Expression {
     const expr = this.expr()
     const body = []
 
@@ -40,7 +41,7 @@ class Parser extends BaseParser {
     }
   }
 
-  expr (): object {
+  expr (): Expression {
     if (this.match('IF')) {
       const condition = this.pipe()
       this.matchStrict('THEN')
@@ -59,20 +60,20 @@ class Parser extends BaseParser {
       this.matchStrict('ASSIGNMENT')
       const value = this.pipe()
 
-      return { type: 'DECLARATION', id, value }
+      return { type: 'DECLARATION', id: { type: 'IDENTIFIER', id: id.literal }, value }
     }
 
     return this.primary()
   }
 
-  primary (): object {
+  primary (): Primary {
     if (this.match('IDENTIFIER')) {
       if (this.check('L_PAREN')) {
-        return this.finishFunction()
+        return this.finishFunctionCall()
       }
 
       else {
-        return this.prev()
+        return { type: 'IDENTIFIER', id: this.prev().literal }
       }
     }
 
@@ -81,23 +82,23 @@ class Parser extends BaseParser {
     }
 
     else if (this.match('NUMBER')) {
-      return this.prev()
+      return { type: 'NUMBER', id: this.prev().literal }
     }
 
     return this.complain()
   }
 
-  finishGroup () {
-    const group = { type: 'GROUP', body: this.pipe() }
+  finishGroup (): Group {
+    const group: Group = { type: 'GROUP', body: this.pipe() }
 
-    this.match('R_PAREN')
+    this.matchStrict('R_PAREN')
     return group
   }
 
-  finishFunction () {
-    const functionCall: { type: string, callee: object, arguments: Array<object | null> } = {
+  finishFunctionCall (): FunctionCall {
+    const functionCall: FunctionCall = {
       type: 'FUNCTION_CALL',
-      callee: this.prev(),
+      callee: this.prev() as Expression,
       arguments: []
     }
 
@@ -115,7 +116,7 @@ class Parser extends BaseParser {
     return functionCall
   }
 
-  complain (): object {
+  complain (): Primary {
     throw new Error(`Unexpected token ${this.current().type}`)
   }
 }
