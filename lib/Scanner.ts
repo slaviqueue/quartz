@@ -1,17 +1,13 @@
+import { Token } from './Token'
 import { TokenType } from './TokenType'
 
-type Token = {
-  type: TokenType;
-  literal?: string;
-};
-
-type KeywordsMapping = Record<string, TokenType>;
+type KeywordsMapping = Record<string, TokenType>
 
 class Scanner {
-  private code: string;
-  private currentPos: number;
-  private tokens: Array<Token>;
-  private keywords: KeywordsMapping;
+  private code: string
+  private currentPos: number
+  private tokens: Array<Token>
+  private keywords: KeywordsMapping
 
   constructor (code: string) {
     this.code = code

@@ -6,7 +6,7 @@ class Parser extends BaseParser {
   }
 
   module () {
-    const module: { type: string; body: Array<object | null> } = {
+    const module: { type: string, body: Array<object | null> } = {
       type: 'MODULE',
       body: []
     }
@@ -53,9 +53,9 @@ class Parser extends BaseParser {
 
   finishFunction () {
     const functionCall: {
-      type: string;
-      callee: object;
-      arguments: Array<object | null>;
+      type: string
+      callee: object
+      arguments: Array<object | null>
     } = {
       type: 'FUNCTION_CALL',
       callee: this.prev(),

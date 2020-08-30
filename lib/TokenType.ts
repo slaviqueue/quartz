@@ -9,4 +9,4 @@ export type TokenType =
   | 'PIPE'
   | 'L_PAREN'
   | 'R_PAREN'
-  | 'COMA';
+  | 'COMA'

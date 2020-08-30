@@ -1,11 +1,11 @@
 type Token = {
-  type: string;
-  literal?: string;
-};
+  type: string
+  literal?: string
+}
 
 class BaseParser {
-  protected tokens: Array<Token>;
-  protected currentPos: number;
+  protected tokens: Array<Token>
+  protected currentPos: number
 
   constructor (tokens: Array<Token> = []) {
     this.tokens = tokens
