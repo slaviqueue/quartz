@@ -12,21 +12,43 @@ class Parser extends BaseParser {
     }
 
     while (this.currentPos < this.tokens.length) {
-      module.body.push(this.expr())
+      module.body.push(this.pipe())
     }
 
     return module
   }
 
+  pipe (): object {
+    const expr = this.expr()
+    const body = []
+
+    if (this.match('PIPE')) {
+      body.push(expr)
+
+      do {
+        const secondExpr = this.expr()
+        body.push(secondExpr)
+      } while (this.match('PIPE'))
+    }
+
+    if (body.length) {
+      return { type: 'PIPE', body }
+    }
+
+    else {
+      return expr
+    }
+  }
+
   expr (): object {
     if (this.match('IF')) {
-      const condition = this.expr()
+      const condition = this.pipe()
       this.matchStrict('THEN')
 
-      const ifBranch = this.expr()
+      const ifBranch = this.pipe()
       this.matchStrict('ELSE')
 
-      const elseBranch = this.expr()
+      const elseBranch = this.pipe()
 
       return { type: 'CONDITION', condition, ifBranch, elseBranch }
     }
@@ -35,7 +57,7 @@ class Parser extends BaseParser {
       this.matchStrict('IDENTIFIER')
       const id = this.prev()
       this.matchStrict('ASSIGNMENT')
-      const value = this.expr()
+      const value = this.pipe()
 
       return { type: 'DECLARATION', id, value }
     }
@@ -66,7 +88,7 @@ class Parser extends BaseParser {
   }
 
   finishGroup () {
-    const group = { type: 'GROUP', body: this.expr() }
+    const group = { type: 'GROUP', body: this.pipe() }
 
     this.match('R_PAREN')
     return group
@@ -82,7 +104,7 @@ class Parser extends BaseParser {
     this.move()
 
     while (!this.check('R_PAREN')) {
-      const arg = this.expr()
+      const arg = this.pipe()
 
       functionCall.arguments.push(arg)
       this.match('COMA')
