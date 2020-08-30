@@ -1,14 +1,21 @@
 import Parser from './lib/Parser'
 import Scanner from './lib/Scanner'
+import { Module } from './lib/SyntaxNodes'
+import CodeGenerator from './lib/CodeGenerator'
 
 function parse (code: string) {
   return new Parser(new Scanner(code).scan()).parse()
 }
 
+function jsify (syntaxTree: Module) {
+  return new CodeGenerator(syntaxTree).generate()
+}
+
 const code = `
-  if a
-    then b
-    else a |> b |> c
+val a = 4
+val b = 5
+
+log(sum(a, b))
 `
 
-console.log(JSON.stringify(parse(code), null, '  '))
+console.log(jsify(parse(code)))

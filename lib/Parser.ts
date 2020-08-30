@@ -82,7 +82,7 @@ class Parser extends BaseParser {
     }
 
     else if (this.match('NUMBER')) {
-      return { type: 'NUMBER', id: this.prev().literal }
+      return { type: 'NUMBER', value: this.prev().literal }
     }
 
     return this.complain()
@@ -98,7 +98,7 @@ class Parser extends BaseParser {
   finishFunctionCall (): FunctionCall {
     const functionCall: FunctionCall = {
       type: 'FUNCTION_CALL',
-      callee: this.prev() as Expression,
+      callee: { type: 'IDENTIFIER', id: this.prev().literal },
       arguments: []
     }
 
