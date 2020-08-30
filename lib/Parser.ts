@@ -33,7 +33,7 @@ class Parser extends BaseParser {
     }
 
     if (body.length) {
-      return { type: 'PIPE', body }
+      return body.reduce((acc, node) => ({ type: 'FUNCTION_CALL', callee: node, arguments: [acc] }))
     }
 
     else {

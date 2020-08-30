@@ -12,10 +12,7 @@ function jsify (syntaxTree: Module) {
 }
 
 const code = `
-val a = 4
-val b = 5
-
-log(sum(a, b))
+1 |> sum(1) |> log
 `
 
 console.log(jsify(parse(code)))

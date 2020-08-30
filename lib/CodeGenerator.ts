@@ -40,7 +40,6 @@ class CodeGenerator {
 
       case 'FUNCTION_CALL': {
         const call = node as FunctionCall
-        console.log(call.callee)
         return `${this.node(call.callee)}(${node.arguments.map((arg) => this.node(arg)).join(', ')})`
       }
 
