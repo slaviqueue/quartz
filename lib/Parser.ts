@@ -52,11 +52,7 @@ class Parser extends BaseParser {
   }
 
   finishFunction () {
-    const functionCall: {
-      type: string
-      callee: object
-      arguments: Array<object | null>
-    } = {
+    const functionCall: { type: string, callee: object, arguments: Array<object | null> } = {
       type: 'FUNCTION_CALL',
       callee: this.prev(),
       arguments: []
