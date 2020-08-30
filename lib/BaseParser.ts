@@ -1,7 +1,4 @@
-type Token = {
-  type: string
-  literal?: string
-}
+import { Token } from './Token'
 
 class BaseParser {
   protected tokens: Array<Token>
