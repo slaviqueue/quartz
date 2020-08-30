@@ -1,4 +1,5 @@
 import { Token } from './Token'
+import { TokenType } from './TokenType'
 
 class BaseParser {
   protected tokens: Array<Token>
@@ -9,7 +10,7 @@ class BaseParser {
     this.currentPos = 0
   }
 
-  protected match (tokenType: string) {
+  protected match (tokenType: TokenType) {
     const matches = this.check(tokenType)
 
     if (matches) this.move()
@@ -27,7 +28,7 @@ class BaseParser {
     return false
   }
 
-  protected matchStrict (tokenType: string) {
+  protected matchStrict (tokenType: TokenType) {
     const match = this.match(tokenType)
 
     if (!match) {

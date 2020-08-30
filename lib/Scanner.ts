@@ -19,7 +19,8 @@ class Scanner {
       if: 'IF',
       then: 'THEN',
       else: 'ELSE',
-      '=': 'ASSIGNMENT'
+      '=': 'ASSIGNMENT',
+      val: 'VAL'
     }
   }
 
@@ -34,6 +35,8 @@ class Scanner {
       } else if (this.matchMany('===')) {
         this.pushToken('STRICT_EQ')
         this.skipN(3)
+      } else if (this.match('=')) {
+        this.eatOne('ASSIGNMENT')
       } else if (this.match('(')) {
         this.eatOne('L_PAREN')
       } else if (this.match(')')) {

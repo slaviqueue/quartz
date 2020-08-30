@@ -29,6 +29,13 @@ class Parser extends BaseParser {
       const elseBranch = this.expr()
 
       return { type: 'CONDITION', condition, ifBranch, elseBranch }
+    } else if (this.match('VAL')) {
+      this.matchStrict('IDENTIFIER')
+      const id = this.prev()
+      this.matchStrict('ASSIGNMENT')
+      const value = this.expr()
+
+      return { type: 'DECLARATION', id, value }
     }
 
     return this.primary()
@@ -46,6 +53,8 @@ class Parser extends BaseParser {
 
       this.match('R_PAREN')
       return group
+    } else if (this.match('NUMBER')) {
+      return this.prev()
     }
 
     return this.complain()
