@@ -2,7 +2,7 @@ import BaseParser from './BaseParser'
 
 class Parser extends BaseParser {
   parse() {
-    return this.module()
+    return this.module();
   }
 
   module() {
@@ -31,36 +31,49 @@ class Parser extends BaseParser {
       return { type: "CONDITION", condition, ifBranch, elseBranch };
     }
 
-    return this.primary()
+    return this.primary();
   }
 
   primary(): object {
     if (this.match("IDENTIFIER")) {
-      if (this.check('L_PAREN')) {
-        const functionCall: { type: string, callee: object, arguments: Array<object | null> } = {
-          type: 'FUNCTION_CALL',
-          callee: this.prev(),
-          arguments: []
-        }
-
-        this.move()
-
-        while(!this.check('R_PAREN')) {
-          const arg = this.expr()
-
-          functionCall.arguments.push(arg)
-          this.match('COMA')
-        }
-
-        this.matchStrict('R_PAREN')
-
-        return functionCall
+      if (this.check("L_PAREN")) {
+        return this.finishFunction();
       } else {
         return this.prev();
       }
+    } else if (this.match("L_PAREN")) {
+      const group = { type: "GROUP", body: this.expr() };
+
+      this.match("R_PAREN");
+      return group;
     }
 
-    return this.complain()    
+    return this.complain();
+  }
+
+  finishFunction() {
+    const functionCall: {
+      type: string;
+      callee: object;
+      arguments: Array<object | null>;
+    } = {
+      type: "FUNCTION_CALL",
+      callee: this.prev(),
+      arguments: []
+    };
+
+    this.move();
+
+    while (!this.check("R_PAREN")) {
+      const arg = this.expr();
+
+      functionCall.arguments.push(arg);
+      this.match("COMA");
+    }
+
+    this.matchStrict("R_PAREN");
+
+    return functionCall;
   }
 
   complain(): object {
@@ -82,12 +95,19 @@ const tokens = [
   { type: "IDENTIFIER", literal: "v" },
 
   { type: "IF" },
-    { type: "IDENTIFIER", literal: "a" },
-    { type: "L_PAREN" },
-    { type: "IDENTIFIER", literal: "a" },
-    { type: "COMA" },
-    { type: "IDENTIFIER", literal: "a" },
-    { type: "R_PAREN" },
+  { type: "IDENTIFIER", literal: "a" },
+  { type: "L_PAREN" },
+  { type: "IF" },
+  { type: "IDENTIFIER", literal: "a" },
+  { type: "THEN" },
+  { type: "IDENTIFIER", literal: "b" },
+  { type: "ELSE" },
+  { type: "L_PAREN" },
+  { type: "IDENTIFIER", literal: "c" },
+  { type: "R_PAREN" },
+  { type: "COMA" },
+  { type: "IDENTIFIER", literal: "a" },
+  { type: "R_PAREN" },
   { type: "THEN" },
   { type: "IDENTIFIER", literal: "b" },
   { type: "ELSE" },
