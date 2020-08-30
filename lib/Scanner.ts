@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import { Token } from './Token'
 import { TokenType } from './TokenType'
 
@@ -25,7 +26,7 @@ class Scanner {
   scan () {
     while (this.currentPos < this.code.length) {
       if (this.isNumber(this.current())) {
-        this.eatMany('NUMBER', this.isNumber)
+        this.eatMany('NUMBER', this.isNumber, Number)
       } else if (this.isWhiteSpace(this.current())) {
         this.skipMany(this.isWhiteSpace)
       } else if (this.isText(this.current())) {
@@ -65,7 +66,13 @@ class Scanner {
   }
 
   pushToken (type: TokenType, literal?: string): void {
-    this.tokens.push({ type, literal })
+    const token: Token = { type }
+
+    if (!isNil(literal)) {
+      token.literal = literal
+    }
+
+    this.tokens.push(token)
   }
 
   eatOne (type: TokenType): void {
@@ -73,8 +80,8 @@ class Scanner {
     this.currentPos++
   }
 
-  eatMany (type: TokenType, tester: (s: string) => boolean): void {
-    this.pushToken(type, this.readWhile(tester))
+  eatMany (type: TokenType, tester: (s: string) => boolean, transform = a => a): void {
+    this.pushToken(type, transform(this.readWhile(tester)))
   }
 
   skipMany (tester: (s: string) => boolean): void {
@@ -119,12 +126,4 @@ class Scanner {
   }
 }
 
-const code = `
-  plus(3, 5) |> print
-
-  if a then 3 else 5
-`
-
-const result = new Scanner(code).scan()
-
-console.log(result)
+export default Scanner

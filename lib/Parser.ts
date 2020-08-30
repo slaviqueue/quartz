@@ -81,39 +81,4 @@ class Parser extends BaseParser {
   }
 }
 
-const tokens = [
-  { type: 'IF' },
-  { type: 'IDENTIFIER', literal: 'a' },
-  { type: 'THEN' },
-  { type: 'IDENTIFIER', literal: 'b' },
-  { type: 'ELSE' },
-  { type: 'IF' },
-  { type: 'IDENTIFIER', literal: 'a' },
-  { type: 'THEN' },
-  { type: 'IDENTIFIER', literal: 'b' },
-  { type: 'ELSE' },
-  { type: 'IDENTIFIER', literal: 'v' },
-
-  { type: 'IF' },
-  { type: 'IDENTIFIER', literal: 'a' },
-  { type: 'L_PAREN' },
-  { type: 'IF' },
-  { type: 'IDENTIFIER', literal: 'a' },
-  { type: 'THEN' },
-  { type: 'IDENTIFIER', literal: 'b' },
-  { type: 'ELSE' },
-  { type: 'L_PAREN' },
-  { type: 'IDENTIFIER', literal: 'c' },
-  { type: 'R_PAREN' },
-  { type: 'COMA' },
-  { type: 'IDENTIFIER', literal: 'a' },
-  { type: 'R_PAREN' },
-  { type: 'THEN' },
-  { type: 'IDENTIFIER', literal: 'b' },
-  { type: 'ELSE' },
-  { type: 'IDENTIFIER', literal: 'v' }
-]
-
-const result = new Parser(tokens).parse()
-
-console.log(result)
+export default Parser
