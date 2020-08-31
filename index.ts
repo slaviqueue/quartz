@@ -12,7 +12,17 @@ function jsify (syntaxTree: Module) {
 }
 
 const code = `
-1 |> sum(1) |> log
+var a = 1
+
+if true then log(1) else log(0)
+
+fn do_stuff(a) {
+  fn (b) {
+    a |> sum(b) |> log
+  }
+}
+
+2 |> do_stuff(1)
 `
 
 console.log(jsify(parse(code)))

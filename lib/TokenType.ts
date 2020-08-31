@@ -11,3 +11,6 @@ export type TokenType =
   | 'R_PAREN'
   | 'COMA'
   | 'VAR'
+  | 'FN'
+  | 'L_CURLY'
+  | 'R_CURLY'

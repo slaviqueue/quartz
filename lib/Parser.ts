@@ -1,5 +1,5 @@
 import BaseParser from './BaseParser'
-import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, Declaration } from './SyntaxNodes'
+import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration } from './SyntaxNodes'
 
 class Parser extends BaseParser {
   parse () {
@@ -42,18 +42,23 @@ class Parser extends BaseParser {
   }
 
   expr (): Expression {
-    if (this.match('IF')) {
+    if (this.check('IF')) {
       return this.condition()
     }
 
-    else if (this.match('VAR')) {
-      return this.var()
+    else if (this.check('VAR')) {
+      return this.variableDeclaration()
+    }
+
+    else if (this.check('FN')) {
+      return this.functionDeclaration()
     }
 
     return this.primary()
   }
 
   condition (): Condition {
+    this.matchStrict('IF')
     const condition = this.pipe()
     this.matchStrict('THEN')
 
@@ -65,18 +70,47 @@ class Parser extends BaseParser {
     return { type: 'CONDITION', condition, ifBranch, elseBranch }
   }
 
-  var (): Declaration {
-    this.matchStrict('IDENTIFIER')
-    const id = this.prev()
+  functionDeclaration (): FunctionDeclaration {
+    this.matchStrict('FN')
+
+    const functionDeclaration: FunctionDeclaration = {
+      type: 'FUNCTION_DECLARATION',
+      id: this.check('IDENTIFIER') ? this.identifier() : null,
+      arguments: [],
+      body: []
+    }
+
+    this.matchStrict('L_PAREN')
+
+    while (!this.check('R_PAREN')) {
+      functionDeclaration.arguments.push(this.identifier())
+      this.match('COMA')
+    }
+
+    this.matchStrict('R_PAREN')
+    this.matchStrict('L_CURLY')
+
+    while (!this.check('R_CURLY')) {
+      functionDeclaration.body.push(this.pipe())
+    }
+
+    this.matchStrict('R_CURLY')
+
+    return functionDeclaration
+  }
+
+  variableDeclaration (): VariableDeclaration {
+    this.matchStrict('VAR')
+    const id = this.identifier()
     this.matchStrict('ASSIGNMENT')
     const value = this.pipe()
 
-    return { type: 'DECLARATION', id: { type: 'IDENTIFIER', id: id.literal }, value }
+    return { type: 'VARIABLE_DECLARATION', id, value }
   }
 
   primary (): Primary {
-    if (this.match('IDENTIFIER')) {
-      if (this.check('L_PAREN')) {
+    if (this.check('IDENTIFIER')) {
+      if (this.check('L_PAREN', 1)) {
         return this.functionCall()
       }
 
@@ -89,7 +123,7 @@ class Parser extends BaseParser {
       return this.group()
     }
 
-    else if (this.match('NUMBER')) {
+    else if (this.check('NUMBER')) {
       return this.number()
     }
 
@@ -97,10 +131,12 @@ class Parser extends BaseParser {
   }
 
   identifier (): Identifier {
+    this.matchStrict('IDENTIFIER')
     return { type: 'IDENTIFIER', id: this.prev().literal }
   }
 
   number (): Number {
+    this.matchStrict('NUMBER')
     return { type: 'NUMBER', value: this.prev().literal }
   }
 
@@ -115,7 +151,7 @@ class Parser extends BaseParser {
   functionCall (): FunctionCall {
     const functionCall: FunctionCall = {
       type: 'FUNCTION_CALL',
-      callee: { type: 'IDENTIFIER', id: this.prev().literal },
+      callee: this.identifier(),
       arguments: []
     }
 

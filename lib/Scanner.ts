@@ -20,7 +20,8 @@ class Scanner {
       then: 'THEN',
       else: 'ELSE',
       '=': 'ASSIGNMENT',
-      var: 'VAR'
+      var: 'VAR',
+      fn: 'FN'
     }
   }
 
@@ -53,6 +54,14 @@ class Scanner {
 
       else if (this.match(')')) {
         this.eatOne('R_PAREN')
+      }
+
+      else if (this.match('{')) {
+        this.eatOne('L_CURLY')
+      }
+
+      else if (this.match('}')) {
+        this.eatOne('R_CURLY')
       }
 
       else if (this.matchMany('|>')) {

@@ -1,4 +1,5 @@
-import { Module, Expression, Identifier, Declaration, Condition, Group, Number, FunctionCall } from './SyntaxNodes'
+import { last } from 'lodash'
+import { Module, Expression, Identifier, VariableDeclaration, Condition, Group, Number, FunctionCall, FunctionDeclaration } from './SyntaxNodes'
 
 class CodeGenerator {
   module: Module
@@ -13,8 +14,8 @@ class CodeGenerator {
 
   private node (node: Expression) {
     switch (node.type) {
-      case 'DECLARATION': {
-        const decl = node as Declaration
+      case 'VARIABLE_DECLARATION': {
+        const decl = node as VariableDeclaration
         return `const ${this.node(decl.id)} = ${this.node(decl.value)}`
       }
 
@@ -41,6 +42,18 @@ class CodeGenerator {
       case 'FUNCTION_CALL': {
         const call = node as FunctionCall
         return `${this.node(call.callee)}(${node.arguments.map((arg) => this.node(arg)).join(', ')})`
+      }
+
+      case 'FUNCTION_DECLARATION': {
+        const decl = node as FunctionDeclaration
+
+        const id = decl.id ? this.node(decl.id) : ''
+        const args = decl.arguments.map((arg) => this.node(arg))
+        const body = decl.body.map((expr) => this.node(expr))
+
+        body[body.length - 1] = `return ${last(body)}`
+
+        return `function ${id} (${args.join(', ')}) {\n${body.join('\n')}\n}`
       }
 
       default: {

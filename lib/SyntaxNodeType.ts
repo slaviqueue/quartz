@@ -1,9 +1,10 @@
 type SyntaxNodeType
   = 'MODULE'
   | 'PIPE'
-  | 'DECLARATION'
+  | 'VARIABLE_DECLARATION'
   | 'CONDITION'
   | 'FUNCTION_CALL'
   | 'GROUP'
   | 'NUMBER'
   | 'IDENTIFIER'
+  | 'FUNCTION_DECLARATION'
