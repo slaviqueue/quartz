@@ -14,15 +14,17 @@ function jsify (syntaxTree: Module) {
 const code = `
 var a = 1
 
-if true then log(1) else log(0)
-
-fn do_stuff(a) {
-  fn (b) {
-    a |> sum(b) |> log
+fn test_fn (a, b) {
+  fn no_args () {
+    fn () {
+      sum(a, b)
+    }
   }
 }
 
-2 |> do_stuff(1)
+(if true then do else not_do)(2)
+
+test_fn(1, 2)()() |> log
 `
 
 console.log(jsify(parse(code)))

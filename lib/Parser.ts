@@ -111,7 +111,10 @@ class Parser extends BaseParser {
   primary (): Primary {
     if (this.check('IDENTIFIER')) {
       if (this.check('L_PAREN', 1)) {
-        return this.functionCall()
+        const id = this.identifier()
+        this.move()
+
+        return this.functionCall(id)
       }
 
       else {
@@ -140,22 +143,24 @@ class Parser extends BaseParser {
     return { type: 'NUMBER', value: this.prev().literal }
   }
 
-  group (): Group {
-    this.matchStrict('R_PAREN')
+  group (): Primary {
+    this.matchStrict('L_PAREN')
     const group: Group = { type: 'GROUP', body: this.pipe() }
     this.matchStrict('R_PAREN')
+
+    if (this.match('L_PAREN')) {
+      return this.functionCall(group)
+    }
 
     return group
   }
 
-  functionCall (): FunctionCall {
+  functionCall (callee: Primary): FunctionCall {
     const functionCall: FunctionCall = {
       type: 'FUNCTION_CALL',
-      callee: this.identifier(),
+      callee,
       arguments: []
     }
-
-    this.move()
 
     while (!this.check('R_PAREN')) {
       const arg = this.pipe()
@@ -165,6 +170,10 @@ class Parser extends BaseParser {
     }
 
     this.matchStrict('R_PAREN')
+
+    if (this.match('L_PAREN')) {
+      return this.functionCall(functionCall)
+    }
 
     return functionCall
   }
