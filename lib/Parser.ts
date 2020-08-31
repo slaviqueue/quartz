@@ -1,5 +1,5 @@
 import BaseParser from './BaseParser'
-import { Module, Expression, Primary, Group, FunctionCall } from './SyntaxNodes'
+import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, Declaration } from './SyntaxNodes'
 
 class Parser extends BaseParser {
   parse () {
@@ -43,59 +43,76 @@ class Parser extends BaseParser {
 
   expr (): Expression {
     if (this.match('IF')) {
-      const condition = this.pipe()
-      this.matchStrict('THEN')
-
-      const ifBranch = this.pipe()
-      this.matchStrict('ELSE')
-
-      const elseBranch = this.pipe()
-
-      return { type: 'CONDITION', condition, ifBranch, elseBranch }
+      return this.condition()
     }
 
-    else if (this.match('VAL')) {
-      this.matchStrict('IDENTIFIER')
-      const id = this.prev()
-      this.matchStrict('ASSIGNMENT')
-      const value = this.pipe()
-
-      return { type: 'DECLARATION', id: { type: 'IDENTIFIER', id: id.literal }, value }
+    else if (this.match('VAR')) {
+      return this.var()
     }
 
     return this.primary()
   }
 
+  condition (): Condition {
+    const condition = this.pipe()
+    this.matchStrict('THEN')
+
+    const ifBranch = this.pipe()
+    this.matchStrict('ELSE')
+
+    const elseBranch = this.pipe()
+
+    return { type: 'CONDITION', condition, ifBranch, elseBranch }
+  }
+
+  var (): Declaration {
+    this.matchStrict('IDENTIFIER')
+    const id = this.prev()
+    this.matchStrict('ASSIGNMENT')
+    const value = this.pipe()
+
+    return { type: 'DECLARATION', id: { type: 'IDENTIFIER', id: id.literal }, value }
+  }
+
   primary (): Primary {
     if (this.match('IDENTIFIER')) {
       if (this.check('L_PAREN')) {
-        return this.finishFunctionCall()
+        return this.functionCall()
       }
 
       else {
-        return { type: 'IDENTIFIER', id: this.prev().literal }
+        return this.identifier()
       }
     }
 
-    else if (this.match('L_PAREN')) {
-      return this.finishGroup()
+    else if (this.check('L_PAREN')) {
+      return this.group()
     }
 
     else if (this.match('NUMBER')) {
-      return { type: 'NUMBER', value: this.prev().literal }
+      return this.number()
     }
 
     return this.complain()
   }
 
-  finishGroup (): Group {
-    const group: Group = { type: 'GROUP', body: this.pipe() }
+  identifier (): Identifier {
+    return { type: 'IDENTIFIER', id: this.prev().literal }
+  }
 
+  number (): Number {
+    return { type: 'NUMBER', value: this.prev().literal }
+  }
+
+  group (): Group {
     this.matchStrict('R_PAREN')
+    const group: Group = { type: 'GROUP', body: this.pipe() }
+    this.matchStrict('R_PAREN')
+
     return group
   }
 
-  finishFunctionCall (): FunctionCall {
+  functionCall (): FunctionCall {
     const functionCall: FunctionCall = {
       type: 'FUNCTION_CALL',
       callee: { type: 'IDENTIFIER', id: this.prev().literal },

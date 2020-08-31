@@ -20,7 +20,7 @@ class Scanner {
       then: 'THEN',
       else: 'ELSE',
       '=': 'ASSIGNMENT',
-      val: 'VAL'
+      var: 'VAR'
     }
   }
 
@@ -143,7 +143,7 @@ class Scanner {
   }
 
   isText (value: string): boolean {
-    return /^[a-z]$/.test(value)
+    return /^[a-zA-Z_]$/.test(value)
   }
 }
 

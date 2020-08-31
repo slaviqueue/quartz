@@ -10,4 +10,4 @@ export type TokenType =
   | 'L_PAREN'
   | 'R_PAREN'
   | 'COMA'
-  | 'VAL'
+  | 'VAR'
