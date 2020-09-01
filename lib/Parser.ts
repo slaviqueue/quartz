@@ -63,7 +63,9 @@ class Parser extends BaseParser {
     if (this.match('PLUS')) {
       const right = this.additionSubtraction()
       return { type: 'ADDITION', left: multDiv, right }
-    } else if (this.match('MINUS')) {
+    }
+
+    else if (this.match('MINUS')) {
       const right = this.additionSubtraction()
       return { type: 'SUBTRACTION', left: multDiv, right }
     }
@@ -77,7 +79,9 @@ class Parser extends BaseParser {
     if (this.match('ASTERISK')) {
       const right = this.multiplicaitonDivision()
       return { type: 'MULTIPLICATION', left: prim, right }
-    } else if (this.match('SLASH')) {
+    }
+
+    else if (this.match('SLASH')) {
       const right = this.multiplicaitonDivision()
       return { type: 'DIVISION', left: prim, right }
     }
