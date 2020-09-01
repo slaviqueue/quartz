@@ -1,5 +1,5 @@
 import BaseParser from './BaseParser'
-import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration } from './SyntaxNodes'
+import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration, Binary } from './SyntaxNodes'
 
 class Parser extends BaseParser {
   parse () {
@@ -54,7 +54,35 @@ class Parser extends BaseParser {
       return this.functionDeclaration()
     }
 
-    return this.primary()
+    return this.additionSubtraction()
+  }
+
+  additionSubtraction (): Binary | Primary {
+    const multDiv = this.multiplicaitonDivision()
+
+    if (this.match('PLUS')) {
+      const right = this.additionSubtraction()
+      return { type: 'ADDITION', left: multDiv, right }
+    } else if (this.match('MINUS')) {
+      const right = this.additionSubtraction()
+      return { type: 'SUBTRACTION', left: multDiv, right }
+    }
+
+    return multDiv
+  }
+
+  multiplicaitonDivision (): Binary | Primary {
+    const prim = this.primary()
+
+    if (this.match('ASTERISK')) {
+      const right = this.multiplicaitonDivision()
+      return { type: 'MULTIPLICATION', left: prim, right }
+    } else if (this.match('SLASH')) {
+      const right = this.multiplicaitonDivision()
+      return { type: 'DIVISION', left: prim, right }
+    }
+
+    return prim
   }
 
   condition (): Condition {

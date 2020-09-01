@@ -1,5 +1,5 @@
 import { last } from 'lodash'
-import { Module, Expression, Identifier, VariableDeclaration, Condition, Group, Number, FunctionCall, FunctionDeclaration } from './SyntaxNodes'
+import { Module, Expression, Identifier, VariableDeclaration, Condition, Group, Number, FunctionCall, FunctionDeclaration, Addition, Binary } from './SyntaxNodes'
 
 class CodeGenerator {
   module: Module
@@ -54,6 +54,21 @@ class CodeGenerator {
         body[body.length - 1] = `return ${last(body)}`
 
         return `function ${id} (${args.join(', ')}) {\n${body.join('\n')}\n}`
+      }
+
+      case 'ADDITION':
+      case 'SUBTRACTION':
+      case 'MULTIPLICATION':
+      case 'DIVISION': {
+        const binary = node as Binary
+        const op = {
+          ADDITION: '+',
+          SUBTRACTION: '-',
+          MULTIPLICATION: '*',
+          DIVISION: '-'
+        }
+
+        return `${this.node(binary.left)} ${op[node.type]} ${this.node(binary.right)}`
       }
 
       default: {

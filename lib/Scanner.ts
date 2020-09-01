@@ -64,6 +64,22 @@ class Scanner {
         this.eatOne('R_CURLY')
       }
 
+      else if (this.match('+')) {
+        this.eatOne('PLUS')
+      }
+
+      else if (this.match('-')) {
+        this.eatOne('MINUS')
+      }
+
+      else if (this.match('*')) {
+        this.eatOne('ASTERISK')
+      }
+
+      else if (this.match('/')) {
+        this.eatOne('SLASH')
+      }
+
       else if (this.matchMany('|>')) {
         this.pushToken('PIPE')
         this.skipN(2)

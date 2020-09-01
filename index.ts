@@ -24,6 +24,8 @@ fn test_fn (a, b) {
 
 (if true then do else not_do)(2)
 
+1 + 2 * 3 - 2
+
 test_fn(1, 2)()() |> log
 `
 
