@@ -15,6 +15,7 @@ class Scanner {
 
     this.currentPos = 0
     this.tokens = []
+
     this.keywords = {
       if: 'IF',
       then: 'THEN',
