@@ -1,5 +1,6 @@
 export type TokenType =
   | 'NUMBER'
+  | 'STRING'
   | 'IDENTIFIER'
   | 'IF'
   | 'THEN'

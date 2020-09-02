@@ -1,5 +1,5 @@
 import { last } from 'lodash'
-import { Module, Expression, Identifier, VariableDeclaration, Condition, Group, Number, FunctionCall, FunctionDeclaration, Binary } from './Parser/SyntaxNodes'
+import { Module, Expression, Identifier, VariableDeclaration, Condition, Group, Number, FunctionCall, FunctionDeclaration, Binary, String } from './Parser/SyntaxNodes'
 
 class CodeGenerator {
   module: Module
@@ -37,6 +37,11 @@ class CodeGenerator {
       case 'NUMBER': {
         const num = node as Number
         return num.value
+      }
+
+      case 'STRING': {
+        const num = node as String
+        return `'${num.value}'`
       }
 
       case 'FUNCTION_CALL': {

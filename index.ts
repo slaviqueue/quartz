@@ -5,7 +5,8 @@ import CodeGenerator from './lib/CodeGenerator'
 import PurityChecker from './lib/PurityChecker/PurityChecker'
 
 function parse (code: string) {
-  return new Parser(new Scanner(code).scan()).parse()
+  const tokens = new Scanner(code).scan()
+  return new Parser(tokens).parse()
 }
 
 function jsify (syntaxTree: Module) {
@@ -20,9 +21,13 @@ const code = `
 impure fn test () {
   var a = 1
 
-  pure fn oneMore () {}
+  pure fn oneMore () {
+    1 + 2
+  }
 
-  impure fn ohMan (a) {}
+  impure fn ohMan (a) {
+    fetch('http://google.com')
+  }
 
   oneMore(ohMan())
 }
@@ -30,7 +35,6 @@ impure fn test () {
 impure fn oneMoreTest () {
   test()
 }
-
 `
 
 const tree = parse(code)

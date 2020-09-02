@@ -33,6 +33,12 @@ class Scanner {
         this.eatMany('NUMBER', this.isNumber, Number)
       }
 
+      else if (this.match("'")) {
+        this.skipN(1)
+        this.eatMany('STRING', this.isString.bind(this))
+        this.skipN(1)
+      }
+
       else if (this.isWhiteSpace(this.current())) {
         this.skipMany(this.isWhiteSpace)
       }
@@ -105,6 +111,10 @@ class Scanner {
     return this.code[this.currentPos]
   }
 
+  prev (): string {
+    return this.code[this.currentPos - 1]
+  }
+
   match (char: string): boolean {
     return this.code[this.currentPos] === char
   }
@@ -146,7 +156,7 @@ class Scanner {
     do {
       value += this.current()
       this.currentPos++
-    } while (tester(this.current()))
+    } while (this.currentPos < this.code.length && tester(this.current()))
 
     return value
   }
@@ -171,6 +181,14 @@ class Scanner {
 
   isText (value: string): boolean {
     return /^[a-zA-Z_]$/.test(value)
+  }
+
+  isString (value: string): boolean {
+    if (this.prev() === '\\') {
+      return true
+    }
+
+    return value !== "'"
   }
 }
 

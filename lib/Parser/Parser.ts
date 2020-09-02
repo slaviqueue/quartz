@@ -1,5 +1,5 @@
 import BaseParser from './BaseParser'
-import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration, Binary } from './SyntaxNodes'
+import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration, Binary, String } from './SyntaxNodes'
 
 class Parser extends BaseParser {
   parse () {
@@ -171,6 +171,10 @@ class Parser extends BaseParser {
       return this.number()
     }
 
+    else if (this.check('STRING')) {
+      return this.string()
+    }
+
     return this.complain()
   }
 
@@ -182,6 +186,11 @@ class Parser extends BaseParser {
   number (): Number {
     this.matchStrict('NUMBER')
     return { type: 'NUMBER', value: this.prev().literal }
+  }
+
+  string (): String {
+    this.matchStrict('STRING')
+    return { type: 'STRING', value: this.prev().literal }
   }
 
   group (): Primary {
