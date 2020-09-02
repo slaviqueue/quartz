@@ -21,7 +21,9 @@ class Scanner {
       else: 'ELSE',
       '=': 'ASSIGNMENT',
       var: 'VAR',
-      fn: 'FN'
+      fn: 'FN',
+      pure: 'PURE',
+      impure: 'IMPURE'
     }
   }
 
@@ -40,7 +42,7 @@ class Scanner {
       }
 
       else if (this.matchMany('===')) {
-        this.pushToken('STRICT_EQ')
+        this.pushToken('STRICT_EQ', '===')
         this.skipN(3)
       }
 
@@ -81,7 +83,7 @@ class Scanner {
       }
 
       else if (this.matchMany('|>')) {
-        this.pushToken('PIPE')
+        this.pushToken('PIPE', '|>')
         this.skipN(2)
       }
 
@@ -122,7 +124,7 @@ class Scanner {
   }
 
   eatOne (type: TokenType): void {
-    this.pushToken(type)
+    this.pushToken(type, this.current())
     this.currentPos++
   }
 
@@ -153,7 +155,7 @@ class Scanner {
     const id = this.readWhile(this.isText)
 
     if (this.keywords[id]) {
-      return this.pushToken(this.keywords[id])
+      return this.pushToken(this.keywords[id], id)
     }
 
     return this.pushToken('IDENTIFIER', id)

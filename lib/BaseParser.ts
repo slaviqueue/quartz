@@ -33,7 +33,7 @@ class BaseParser {
 
     if (!match) {
       throw new Error(
-        `Unexpected token ${this.current().type}, expected: ${tokenType}`
+        `Unexpected token ${this.current().literal}, expected: ${tokenType}`
       )
     }
   }

@@ -20,3 +20,5 @@ export type TokenType =
   | 'SLASH'
   | 'GT'
   | 'LT'
+  | 'PURE'
+  | 'IMPURE'

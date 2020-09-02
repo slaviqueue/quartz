@@ -9,7 +9,12 @@ export type Primary = Group | FunctionCall | Number | Identifier
 export type Condition = { type: 'CONDITION', condition: Expression, ifBranch: Expression, elseBranch: Expression }
 export type FunctionCall = { type: 'FUNCTION_CALL', callee: Expression, arguments: Array<Expression> }
 export type VariableDeclaration = { type: 'VARIABLE_DECLARATION', id: Identifier, value: Expression }
-export type FunctionDeclaration = { type: 'FUNCTION_DECLARATION', id: Identifier, arguments: Array<Expression>, body: Array<Expression> }
+export type FunctionDeclaration = {
+  type: 'FUNCTION_DECLARATION',
+  id: Identifier,
+  arguments: Array<Expression>, body: Array<Expression>,
+  purines: 'unspecified' | 'pure' | 'impure'
+}
 
 export type Subtraction = { type: 'SUBTRACTION', left: Expression, right: Expression }
 export type Addition = { type: 'ADDITION', left: Expression, right: Expression }

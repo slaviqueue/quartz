@@ -12,7 +12,7 @@ function jsify (syntaxTree: Module) {
 }
 
 const code = `
-var a = 1
+pure var a = 1
 
 fn test_fn (a, b) {
   fn no_args () {

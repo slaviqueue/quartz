@@ -50,7 +50,7 @@ class Parser extends BaseParser {
       return this.variableDeclaration()
     }
 
-    else if (this.check('FN')) {
+    else if (this.check('FN') || this.check('PURE') || this.check('IMPURE')) {
       return this.functionDeclaration()
     }
 
@@ -103,13 +103,24 @@ class Parser extends BaseParser {
   }
 
   functionDeclaration (): FunctionDeclaration {
+    let purines: 'unspecified' | 'pure' | 'impure' = 'unspecified'
+
+    if (this.match('PURE')) {
+      purines = 'pure'
+    }
+
+    else if (this.match('IMPURE')) {
+      purines = 'impure'
+    }
+
     this.matchStrict('FN')
 
     const functionDeclaration: FunctionDeclaration = {
       type: 'FUNCTION_DECLARATION',
       id: this.check('IDENTIFIER') ? this.identifier() : null,
       arguments: [],
-      body: []
+      body: [],
+      purines
     }
 
     this.matchStrict('L_PAREN')
