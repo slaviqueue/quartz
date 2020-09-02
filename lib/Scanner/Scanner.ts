@@ -19,7 +19,6 @@ class Scanner {
       if: 'IF',
       then: 'THEN',
       else: 'ELSE',
-      '=': 'ASSIGNMENT',
       var: 'VAR',
       fn: 'FN',
       pure: 'PURE',
