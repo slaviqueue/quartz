@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import Scanner from '../lib/Scanner'
+import Scanner from '../lib/Scanner/Scanner'
 
 describe('Scanner', () => {
   describe('#scan()', () => {

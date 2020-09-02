@@ -1,5 +1,5 @@
-import { Token } from './Token'
-import { TokenType } from './TokenType'
+import { Token } from '../Scanner/Token'
+import { TokenType } from '../Scanner/TokenType'
 
 class BaseParser {
   protected tokens: Array<Token>

@@ -1,6 +1,6 @@
-import Parser from './lib/Parser'
-import Scanner from './lib/Scanner'
-import { Module } from './lib/SyntaxNodes'
+import Parser from './lib/Parser/Parser'
+import Scanner from './lib/Scanner/Scanner'
+import { Module } from './lib/Parser/SyntaxNodes'
 import CodeGenerator from './lib/CodeGenerator'
 
 function parse (code: string) {
@@ -12,9 +12,9 @@ function jsify (syntaxTree: Module) {
 }
 
 const code = `
-pure var a = 1
+var a = 1
 
-fn test_fn (a, b) {
+pure fn test_fn (a, b) {
   fn no_args () {
     fn () {
       sum(a, b)

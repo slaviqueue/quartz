@@ -13,7 +13,7 @@ export type FunctionDeclaration = {
   type: 'FUNCTION_DECLARATION',
   id: Identifier,
   arguments: Array<Expression>, body: Array<Expression>,
-  purines: 'unspecified' | 'pure' | 'impure'
+  purity: 'unspecified' | 'pure' | 'impure'
 }
 
 export type Subtraction = { type: 'SUBTRACTION', left: Expression, right: Expression }

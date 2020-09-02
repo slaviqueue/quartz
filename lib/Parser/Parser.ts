@@ -103,14 +103,14 @@ class Parser extends BaseParser {
   }
 
   functionDeclaration (): FunctionDeclaration {
-    let purines: 'unspecified' | 'pure' | 'impure' = 'unspecified'
+    let purity: 'unspecified' | 'pure' | 'impure' = 'unspecified'
 
     if (this.match('PURE')) {
-      purines = 'pure'
+      purity = 'pure'
     }
 
     else if (this.match('IMPURE')) {
-      purines = 'impure'
+      purity = 'impure'
     }
 
     this.matchStrict('FN')
@@ -120,7 +120,7 @@ class Parser extends BaseParser {
       id: this.check('IDENTIFIER') ? this.identifier() : null,
       arguments: [],
       body: [],
-      purines
+      purity
     }
 
     this.matchStrict('L_PAREN')
