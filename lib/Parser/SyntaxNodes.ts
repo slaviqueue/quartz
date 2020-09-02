@@ -1,5 +1,7 @@
 export type SyntaxNode = { type: SyntaxNodeType }
 
+export type SyntaxTree = Module | Expression
+
 export type Module = { type: 'MODULE', body: Array<Expression> }
 
 export type Expression = Condition | FunctionCall | VariableDeclaration | Binary | Primary | FunctionDeclaration
@@ -13,7 +15,7 @@ export type FunctionDeclaration = {
   type: 'FUNCTION_DECLARATION',
   id: Identifier,
   arguments: Array<Expression>, body: Array<Expression>,
-  purity: 'unspecified' | 'pure' | 'impure'
+  purity: 'pure' | 'impure'
 }
 
 export type Subtraction = { type: 'SUBTRACTION', left: Expression, right: Expression }

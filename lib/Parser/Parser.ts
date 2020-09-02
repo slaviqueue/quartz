@@ -103,13 +103,11 @@ class Parser extends BaseParser {
   }
 
   functionDeclaration (): FunctionDeclaration {
-    let purity: 'unspecified' | 'pure' | 'impure' = 'unspecified'
+    let purity: 'pure' | 'impure' = 'pure'
 
-    if (this.match('PURE')) {
-      purity = 'pure'
-    }
+    this.match('PURE')
 
-    else if (this.match('IMPURE')) {
+    if (this.match('IMPURE')) {
       purity = 'impure'
     }
 

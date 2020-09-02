@@ -1,7 +1,8 @@
 import Parser from './lib/Parser/Parser'
 import Scanner from './lib/Scanner/Scanner'
-import { Module } from './lib/Parser/SyntaxNodes'
+import { Module, SyntaxTree } from './lib/Parser/SyntaxNodes'
 import CodeGenerator from './lib/CodeGenerator'
+import PurityChecker from './lib/PurityChecker/PurityChecker'
 
 function parse (code: string) {
   return new Parser(new Scanner(code).scan()).parse()
@@ -11,22 +12,30 @@ function jsify (syntaxTree: Module) {
   return new CodeGenerator(syntaxTree).generate()
 }
 
-const code = `
-var a = 1
-
-pure fn test_fn (a, b) {
-  fn no_args () {
-    fn () {
-      sum(a, b)
-    }
-  }
+function checkPurity (syntaxTree: SyntaxTree) {
+  return new PurityChecker(syntaxTree).check()
 }
 
-(if true then do else not_do)(2)
+const code = `
+impure fn test () {
+  var a = 1
 
-1 + 2 * 3 - 2
+  pure fn oneMore () {}
 
-test_fn(1, 2)()() |> log
+  impure fn ohMan (a) {}
+
+  oneMore(ohMan())
+}
+
+impure fn oneMoreTest () {
+  test()
+}
+
 `
 
-console.log(jsify(parse(code)))
+const tree = parse(code)
+const js = jsify(tree)
+
+checkPurity(tree)
+
+console.log(js)
