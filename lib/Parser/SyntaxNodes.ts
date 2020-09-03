@@ -1,5 +1,3 @@
-export type SyntaxNode = { type: SyntaxNodeType }
-
 export type SyntaxTree = Module | Expression
 
 export type Module = { type: 'MODULE', body: Array<Expression> }

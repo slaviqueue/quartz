@@ -18,22 +18,12 @@ function checkPurity (syntaxTree: SyntaxTree) {
 }
 
 const code = `
-impure fn test () {
-  var a = 1
+impure fn fetch() {}
 
-  pure fn oneMore () {
-    1 + 2
-  }
-
-  impure fn ohMan (a) {
-    fetch('http://google.com')
-  }
-
-  oneMore(ohMan())
-}
-
-impure fn oneMoreTest () {
-  test()
+pure fn ohMan (a) {
+  fetch('http://google.com')
+    |> pThen(log)
+    |> pCatch(log)
 }
 `
 

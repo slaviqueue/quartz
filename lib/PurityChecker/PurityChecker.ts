@@ -36,21 +36,17 @@ class PurityChecker {
         this.currentEnv = new Environment(this.currentEnv)
 
         const id = syntaxNode.id?.id
+        const isFunctionActuallyPure = this.checkFunctionBodyPurity(syntaxNode)
+
+        if (syntaxNode.purity === 'pure' && !isFunctionActuallyPure) {
+          throw new Error(`Function "${syntaxNode.id.id}" is actually impure bruh`)
+        }
 
         if (syntaxNode.purity === 'impure') {
           this.setFunctionDeclarationPurityAndPopCurrentEnv(id, 'impure')
-          return
+          return 'impure'
         }
 
-        const usedFunctionPurities: Array<Purity> = []
-
-        for (const expr of syntaxNode.body) {
-          usedFunctionPurities.push(this.checkNode(expr))
-        }
-
-        const isFunctionActuallyPure = usedFunctionPurities.indexOf('impure') === -1
-
-        this.complainIfSpecifiedFunctionPurityIsIncorrect(syntaxNode, isFunctionActuallyPure)
         this.setFunctionDeclarationPurityAndPopCurrentEnv(id, isFunctionActuallyPure ? 'pure' : 'impure')
 
         return this.currentEnv[id]
@@ -59,12 +55,15 @@ class PurityChecker {
       case 'FUNCTION_CALL': {
         const { callee } = (syntaxNode as FunctionCall)
 
-        if (callee.type !== 'IDENTIFIER') {
-          return null
-        }
+        // This condition is not moved to switch above, cuz we only need to
+        // check identifiers which are callee
+
+        const calleePurity = callee.type === 'IDENTIFIER'
+          ? this.getFunctionPurity(callee.id, this.currentEnv)
+          : this.checkNode(callee)
 
         return this.getSinglePurity([
-          this.getFunctionPurity(callee.id, this.currentEnv),
+          calleePurity,
           ...this.getExpressionsPurities(syntaxNode.arguments)
         ])
       }
@@ -75,10 +74,15 @@ class PurityChecker {
     }
   }
 
-  private complainIfSpecifiedFunctionPurityIsIncorrect (syntaxNode: FunctionDeclaration, isFunctionActuallyPure: boolean) {
-    if (syntaxNode.purity === 'pure' && !isFunctionActuallyPure) {
-      throw new Error(`Function "${syntaxNode.id.id}" is actually impure bruh`)
+  private checkFunctionBodyPurity (functionSyntaxNode: FunctionDeclaration) {
+    const usedFunctionPurities: Array<Purity> = []
+
+    for (const expr of functionSyntaxNode.body) {
+      usedFunctionPurities.push(this.checkNode(expr))
     }
+
+    const isFunctionPure = usedFunctionPurities.indexOf('impure') === -1
+    return isFunctionPure
   }
 
   private setFunctionDeclarationPurityAndPopCurrentEnv (id: Identifier, purity: Purity): void {
