@@ -23,3 +23,4 @@ export type TokenType =
   | 'LT'
   | 'PURE'
   | 'IMPURE'
+  | 'COLON'

@@ -97,6 +97,10 @@ class Scanner {
         this.eatOne('COMA')
       }
 
+      else if (this.match(':')) {
+        this.eatOne('COLON')
+      }
+
       else {
         throw new Error(
           `unexpected character at ${this.currentPos}: ${this.current()}`
