@@ -8,11 +8,11 @@ describe('Scanner', () => {
       const tokens = new Scanner(code).scan()
 
       expect(tokens).to.deep.eq([
-        { type: 'IF' },
+        { type: 'IF', literal: 'if' },
         { type: 'NUMBER', literal: 1 },
-        { type: 'THEN' },
+        { type: 'THEN', literal: 'then' },
         { type: 'NUMBER', literal: 0 },
-        { type: 'ELSE' },
+        { type: 'ELSE', literal: 'else' },
         { type: 'NUMBER', literal: 1 }
       ])
     })
