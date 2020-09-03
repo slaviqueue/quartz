@@ -69,6 +69,28 @@ class PurityChecker {
         ])
       }
 
+      case 'ADDITION':
+      case 'DIVISION':
+      case 'SUBTRACTION':
+      case 'MULTIPLICATION': {
+        return this.getSinglePurity(this.getExpressionsPurities([
+          syntaxNode.left,
+          syntaxNode.right
+        ]))
+      }
+
+      case 'CONDITION': {
+        return this.getSinglePurity(this.getExpressionsPurities([
+          syntaxNode.condition,
+          syntaxNode.ifBranch,
+          syntaxNode.elseBranch
+        ]))
+      }
+
+      case 'GROUP': {
+        return this.checkNode(syntaxNode.body)
+      }
+
       default: {
         return 'pure'
       }
