@@ -1,5 +1,4 @@
 import { SyntaxTree, FunctionCall, FunctionDeclaration } from '../Parser/SyntaxNodes'
-import logErrorWithoutJsStackTrace from '../Utils/logErrorWithoutJsStackTrace'
 import PurityCheckError from './PurityCheckError'
 
 type Identifier = string
