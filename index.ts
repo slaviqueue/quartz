@@ -25,6 +25,8 @@ pure fn ohMan (a) {
     |> pThen(log)
     |> pCatch(log)
 }
+
+ohMan()
 `
 
 const tree = parse(code)

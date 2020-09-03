@@ -1,4 +1,6 @@
 import { SyntaxTree, FunctionCall, FunctionDeclaration } from '../Parser/SyntaxNodes'
+import logErrorWithoutJsStackTrace from '../Utils/logErrorWithoutJsStackTrace'
+import PurityCheckError from './PurityCheckError'
 
 type Identifier = string
 type Purity = 'pure' | 'impure'
@@ -39,7 +41,7 @@ class PurityChecker {
         const isFunctionActuallyPure = this.checkFunctionBodyPurity(syntaxNode)
 
         if (syntaxNode.purity === 'pure' && !isFunctionActuallyPure) {
-          throw new Error(`Function "${syntaxNode.id.id}" is actually impure bruh`)
+          throw new PurityCheckError(`Function "${syntaxNode.id.id}" is actually impure bruh`)
         }
 
         if (syntaxNode.purity === 'impure') {
