@@ -1,5 +1,17 @@
 import { last } from 'lodash'
-import { Module, Expression, Identifier, VariableDeclaration, Condition, Group, Number, FunctionCall, FunctionDeclaration, Binary, String } from './Parser/SyntaxNodes'
+import {
+  Module,
+  Expression,
+  Identifier,
+  VariableDeclaration,
+  Condition,
+  Group,
+  Number,
+  FunctionCall,
+  FunctionDeclaration,
+  Binary,
+  String
+} from './Parser/SyntaxNodes'
 
 class CodeGenerator {
   module: Module
