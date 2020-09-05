@@ -8,3 +8,4 @@ type SyntaxNodeType
   | 'NUMBER'
   | 'IDENTIFIER'
   | 'FUNCTION_DECLARATION'
+  | 'FUNCTION_PARAMETER'

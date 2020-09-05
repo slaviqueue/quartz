@@ -2,9 +2,27 @@ export type SyntaxTree = Module | Expression
 
 export type Module = { type: 'MODULE', body: Array<Expression> }
 
-export type Expression = Condition | FunctionCall | VariableDeclaration | Binary | Primary | FunctionDeclaration
-export type Binary = Subtraction | Addition | Multiplication | Division
-export type Primary = Group | FunctionCall | Number | Identifier | String
+export type Expression
+  = Condition
+  | FunctionCall
+  | VariableDeclaration
+  | Binary
+  | Primary
+  | FunctionDeclaration
+
+export type Binary
+  = Subtraction
+  | Addition
+  | Multiplication
+  | Division
+
+export type Primary
+  = Group
+  | FunctionCall
+  | Number
+  | Identifier
+  | String
+  | FunctionParameter
 
 export type Condition = { type: 'CONDITION', condition: Expression, ifBranch: Expression, elseBranch: Expression }
 export type FunctionCall = { type: 'FUNCTION_CALL', callee: Expression, arguments: Array<Expression> }
@@ -12,9 +30,12 @@ export type VariableDeclaration = { type: 'VARIABLE_DECLARATION', id: Identifier
 export type FunctionDeclaration = {
   type: 'FUNCTION_DECLARATION',
   id: Identifier,
-  arguments: Array<Expression>, body: Array<Expression>,
+  parameters: Array<FunctionParameter>,
+  body: Array<Expression>,
   purity: 'pure' | 'impure'
 }
+
+export type FunctionParameter = { type: 'FUNCTION_PARAMETER', paramType: string, id: string }
 
 export type Subtraction = { type: 'SUBTRACTION', left: Expression, right: Expression }
 export type Addition = { type: 'ADDITION', left: Expression, right: Expression }

@@ -10,7 +10,8 @@ import {
   FunctionCall,
   FunctionDeclaration,
   Binary,
-  String
+  String,
+  FunctionParameter
 } from './Parser/SyntaxNodes'
 
 class CodeGenerator {
@@ -65,12 +66,18 @@ class CodeGenerator {
         const decl = node as FunctionDeclaration
 
         const id = decl.id ? this.node(decl.id) : ''
-        const args = decl.arguments.map((arg) => this.node(arg))
+        const args = decl.parameters.map((arg) => this.node(arg))
         const body = decl.body.map((expr) => this.node(expr))
 
         body[body.length - 1] = `return ${last(body)}`
 
         return `function ${id} (${args.join(', ')}) {\n${body.join('\n')}\n}`
+      }
+
+      case 'FUNCTION_PARAMETER': {
+        const param = node as FunctionParameter
+
+        return param.id
       }
 
       case 'ADDITION':

@@ -20,7 +20,7 @@ function checkPurity (syntaxTree: SyntaxTree) {
 const code = `
 impure fn fetch() {}
 
-pure fn ohMan (a) {
+impure fn ohMan (a: number, b: test) {
   fetch('http://google.com')
     |> pThen(log)
     |> pCatch(log)

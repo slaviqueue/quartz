@@ -1,5 +1,5 @@
 import BaseParser from './BaseParser'
-import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration, Binary, String } from './SyntaxNodes'
+import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration, Binary, String, FunctionParameter } from './SyntaxNodes'
 
 class Parser extends BaseParser {
   parse () {
@@ -91,10 +91,13 @@ class Parser extends BaseParser {
 
   condition (): Condition {
     this.matchStrict('IF')
+
     const condition = this.pipe()
+
     this.matchStrict('THEN')
 
     const ifBranch = this.pipe()
+
     this.matchStrict('ELSE')
 
     const elseBranch = this.pipe()
@@ -116,7 +119,7 @@ class Parser extends BaseParser {
     const functionDeclaration: FunctionDeclaration = {
       type: 'FUNCTION_DECLARATION',
       id: this.check('IDENTIFIER') ? this.identifier() : null,
-      arguments: [],
+      parameters: [],
       body: [],
       purity
     }
@@ -124,7 +127,7 @@ class Parser extends BaseParser {
     this.matchStrict('L_PAREN')
 
     while (!this.check('R_PAREN')) {
-      functionDeclaration.arguments.push(this.identifier())
+      functionDeclaration.parameters.push(this.functionParameter())
       this.match('COMA')
     }
 
@@ -142,8 +145,11 @@ class Parser extends BaseParser {
 
   variableDeclaration (): VariableDeclaration {
     this.matchStrict('VAR')
+
     const id = this.identifier()
+
     this.matchStrict('ASSIGNMENT')
+
     const value = this.pipe()
 
     return { type: 'VARIABLE_DECLARATION', id, value }
@@ -195,7 +201,9 @@ class Parser extends BaseParser {
 
   group (): Primary {
     this.matchStrict('L_PAREN')
+
     const group: Group = { type: 'GROUP', body: this.pipe() }
+
     this.matchStrict('R_PAREN')
 
     if (this.match('L_PAREN')) {
@@ -226,6 +234,20 @@ class Parser extends BaseParser {
     }
 
     return functionCall
+  }
+
+  functionParameter (): FunctionParameter {
+    this.matchStrict('IDENTIFIER')
+
+    const id = this.prev().literal
+    let paramType = null
+
+    if (this.match('COLON')) {
+      paramType = this.current().literal
+      this.move()
+    }
+
+    return { type: 'FUNCTION_PARAMETER', id, paramType }
   }
 
   complain (): Primary {
