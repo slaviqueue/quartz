@@ -26,13 +26,15 @@ export type Primary
 
 export type Condition = { type: 'CONDITION', condition: Expression, ifBranch: Expression, elseBranch: Expression }
 export type FunctionCall = { type: 'FUNCTION_CALL', callee: Expression, arguments: Array<Expression> }
-export type VariableDeclaration = { type: 'VARIABLE_DECLARATION', id: Identifier, value: Expression }
+export type VariableDeclaration = { type: 'VARIABLE_DECLARATION', id: Identifier, value: Expression, varType: string }
+
 export type FunctionDeclaration = {
   type: 'FUNCTION_DECLARATION',
   id: Identifier,
   parameters: Array<FunctionParameter>,
   body: Array<Expression>,
-  purity: 'pure' | 'impure'
+  purity: 'pure' | 'impure',
+  returnType?: string
 }
 
 export type FunctionParameter = { type: 'FUNCTION_PARAMETER', paramType: string, id: string }

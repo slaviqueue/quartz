@@ -1,5 +1,19 @@
 import BaseParser from './BaseParser'
-import { Module, Expression, Primary, Group, FunctionCall, Identifier, Number, Condition, VariableDeclaration, FunctionDeclaration, Binary, String, FunctionParameter } from './SyntaxNodes'
+import {
+  Module,
+  Expression,
+  Primary,
+  Group,
+  FunctionCall,
+  Identifier,
+  Number,
+  Condition,
+  VariableDeclaration,
+  FunctionDeclaration,
+  Binary,
+  String,
+  FunctionParameter
+} from './SyntaxNodes'
 
 class Parser extends BaseParser {
   parse () {
@@ -121,7 +135,8 @@ class Parser extends BaseParser {
       id: this.check('IDENTIFIER') ? this.identifier() : null,
       parameters: [],
       body: [],
-      purity
+      purity,
+      returnType: null
     }
 
     this.matchStrict('L_PAREN')
@@ -132,6 +147,12 @@ class Parser extends BaseParser {
     }
 
     this.matchStrict('R_PAREN')
+
+    if (this.match('L_PAREN')) {
+      functionDeclaration.returnType = this.functionReturnType()
+      this.matchStrict('R_PAREN')
+    }
+
     this.matchStrict('L_CURLY')
 
     while (!this.check('R_CURLY')) {
@@ -143,16 +164,26 @@ class Parser extends BaseParser {
     return functionDeclaration
   }
 
+  functionReturnType (): string {
+    return this.typeAnnotation()
+  }
+
   variableDeclaration (): VariableDeclaration {
     this.matchStrict('VAR')
 
     const id = this.identifier()
 
+    const decl: VariableDeclaration = { type: 'VARIABLE_DECLARATION', id, value: null, varType: null }
+
+    if (this.match('COLON')) {
+      decl.varType = this.typeAnnotation()
+    }
+
     this.matchStrict('ASSIGNMENT')
 
-    const value = this.pipe()
+    decl.value = this.pipe()
 
-    return { type: 'VARIABLE_DECLARATION', id, value }
+    return decl
   }
 
   primary (): Primary {
@@ -243,11 +274,17 @@ class Parser extends BaseParser {
     let paramType = null
 
     if (this.match('COLON')) {
-      paramType = this.current().literal
-      this.move()
+      paramType = this.typeAnnotation()
     }
 
     return { type: 'FUNCTION_PARAMETER', id, paramType }
+  }
+
+  typeAnnotation (): string {
+    const type = this.current().literal
+    this.move()
+
+    return type
   }
 
   complain (): Primary {
