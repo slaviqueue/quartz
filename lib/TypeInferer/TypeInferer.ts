@@ -52,13 +52,15 @@ class TypeInferer {
         const decl = node as VariableDeclaration
         const valueType = this.inferNode(decl.value)
 
-        if (this.currentEnv[decl.id.id]) {
+        if (this.currentEnv.types[decl.id.id]) {
           throw new Error(`Cannot reassign ${decl.id.id}`)
         }
 
         if (decl.varType && decl.varType !== (valueType as NamedType).name) {
           throw new InferenceError(`Type mismatch. Expected ${decl.id.id} to have type ${decl.varType} but got ${(valueType as NamedType).name}`)
         }
+
+        this.currentEnv.types[decl.id.id] = valueType
 
         return valueType
       }

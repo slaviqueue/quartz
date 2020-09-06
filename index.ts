@@ -24,13 +24,12 @@ function checkTypes (syntaxTree: SyntaxTree) {
 }
 
 const code = `
-var a: number = 1
+impure fn log (a: number) (void) {}
 
-fn add (a: number, b: number) (number) {
-  a + b
-}
+1 |> log
 
-add(1, 2)
+var a = 1
+var a = 2
 `
 
 const tree = parse(code)
