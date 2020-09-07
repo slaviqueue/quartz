@@ -1,11 +1,11 @@
 # quartz
 
-I'm developing this language to practice my mad programming language design skills.
+I'm developing this language to practice my mad programming language design skills. It compiles to javascript.
 
 ### DISCLAIMER
 I haven't implemented module system yet and I don't want to keep std stuff in global scope.
 So for now, code examples compiled to js will not work, because of lack of
-implementations of functions like `log`, `pThen` and `pCatch` (`.then` and `.catch` for promises) etc
+implementations of functions like `print`, `pThen` and `pCatch` (`.then` and `.catch` for promises) etc
 
 ### What is this for
 
@@ -25,13 +25,13 @@ So, what do we have here:
 #### Hello, world:
 
 ```
-log('Hello, world!')
+print('Hello, world!')
 ```
 
 or with pipe
 
 ```
-'Hello, world!' |> log
+'Hello, world!' |> print
 ```
 
 #### Pure/impure functions:
